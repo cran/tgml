@@ -1,0 +1,9 @@
+importFrom("pROC", "roc")
+importFrom("glmnet", "cv.glmnet")
+importFrom("randomForest", "randomForest")
+importFrom("e1071", "svm")
+
+importFrom("stats", "quantile","coef","complete.cases", "predict")
+importFrom("graphics", "plot")
+
+export(tgml)
