@@ -1,9 +1,9 @@
 \name{tgml}
 \alias{tgml}
-\title{Treed Guided Machine Learning}
+\title{Tree Guided Machine Learning}
 \description{The treed model generalizes the classification and regression tree (CART) model by partitioning subjects into terminal nodes and tailoring machine learning model to each terminal node.}
 \usage{
-  tgml(y,x,z,ynew,xnew,znew,MLlist,eval,cut,max_depth,min_sample)
+  tgml(y,x,z,ynew,xnew,znew,MLlist,cut,max_depth,min_sample)
 }
 \arguments{
   \item{y}{Response vector. If a factor codied as 0 or 1, classification is assumed. Otherwise, regression is assumed.}
@@ -13,8 +13,7 @@
   \item{xnew}{Data.frame or matrix for the test set corresponding to x (default xnew=NULL).}
   \item{znew}{Data.frame or matrix for the test set corresponding to z (default znew=NULL).}
   \item{MLlist}{Candidate ML models that can be assigned to each terminal node (default MLlist=c("lasso","rf","svm")). Any other ML models can be included. See the details below.}
-  \item{eval}{Evaluation criteria to split trees, where eval="mse","bs", or "auc" stands for mean squared error, brier score, and area under the receiver operating characteristics (ROC) curve, respectively. If eval=NULL, "mse" (or "bs") is used for a continuous (or binary) y.}
-  \item{cut}{Number of percentile-based cutoff values for jth column of x, j=1,2,.... (default cut=10).}
+  \item{cut}{Number of percentile-based candidate cutoff values for each x[,j], j=1,2,.... (default cut=10). It is only used when x[,j] has the unique values more than cut.}
   \item{max_depth}{Maximum depth of trees. Equivalently, max_depth=log2(max_B), where max_B is the number of maximum terminal nodes (or subgroups) (default max_depth=4 (or equivalently max_B=16)).}
   \item{min_sample}{The number of minimum sample size per each node, i.e., length(y)>min_sample if y is continuous and min(length(y==1),length(y==0))>min_sample (default min_sample=20).}
 }
@@ -24,7 +23,7 @@ Ideally, there are two sets of predictors, x and z, e.g., demographic variables 
 
 Regarding the node number, an internal node s has left and right child nodes 2\eqn{\times}s and 2\eqn{\times}s+1, respectively, where node 1 is a root node; nodes 2 and 3 are left and right child nodes of node 1; nodes 4 and 5 are left and right nodes of node 2; and so on.
 
-Currently, lasso(), randomForest(), and svm(...,kernel="radial") functions from R packages cv.glmnet, randomForest, and e1071 are supported, but any ML models can be flexibly added, e.g., see the example 3 below.
+Currently, lasso(), randomForest(), and svm(...,kernel="radial") functions from R packages cv.glmnet, randomForest, and e1071 are supported. In addition to these, any ML models can be flexibly added, e.g., see the example 3 below.
 }
 
 \value{An object of class tgml, which is a list with the following components:
@@ -48,7 +47,7 @@ Currently, lasso(), randomForest(), and svm(...,kernel="radial") functions from 
 \item{auc_new}{Test AUC.}
 }
 
-\references{Nishtha Shah and Yunro Chung, Treed-guided personalized prediction with applications to precision diagnostics (in preperation)}
+\references{Nishtha Shah, Hassan Ghasemzadeh and Yunro Chung, Treed-guided machine learning for precision diagnostics (in preperation)}
 \author{Yunro Chung [aut, cre]}
 
 \examples{
@@ -124,6 +123,7 @@ plot(fit2$roc_new)
 #3.1. ridge regression for continuous y.
 c_ridge=function(y,x){
   x=data.matrix(x)
+  fit=NULL
   suppressWarnings(try(fit<-glmnet::cv.glmnet(x,y,alpha=0),silent=TRUE))
   return(fit)
 }

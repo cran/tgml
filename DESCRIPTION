@@ -1,9 +1,9 @@
 Package: tgml
 Type: Package
-Title: Treed Guided Machine Learning for Personalized Prediction and
+Title: Tree Guided Machine Learning for Personalized Prediction and
         Precision Diagnostics
-Version: 0.1.0
-Date: 2025-04-22
+Version: 0.2.0
+Date: 2025-09-24
 Authors@R: 
   c(person(given = "Yunro",
            family = "Chung",
@@ -16,8 +16,8 @@ License: GPL (>= 2)
 Depends: R (>= 4.5.0), glmnet, randomForest, e1071, pROC, stats,
         graphics
 NeedsCompilation: no
-Packaged: 2025-04-29 14:27:24 UTC; ychung36
+Packaged: 2025-09-24 19:17:08 UTC; ychung36
 Author: Yunro Chung [aut, cre] (ORCID: <https://orcid.org/0000-0001-9125-9277>)
 Maintainer: Yunro Chung <yunro.chung@asu.edu>
 Repository: CRAN
-Date/Publication: 2025-05-02 09:10:01 UTC
+Date/Publication: 2025-09-24 19:40:02 UTC

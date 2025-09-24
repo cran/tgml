@@ -1,36 +1,27 @@
 tgml=function(y,x,z,ynew=NULL,xnew=NULL,znew=NULL,
              MLlist=c("lasso","rf","svm"),
-             eval=NULL,
              cut=10,max_depth=4,min_sample=20){
 
   ###
   #1. setup
   ###
   #1.1. outcome type
-  type="c"
-  if(is.factor(y))
+  if(is.factor(y)){
     type="b" #binary
-
-  if(is.null(eval)){
+    eval="bs"
+  }else{
+    type="c"
     eval="mse"
-    if(type=="b")
-      eval="bs"
   }
 
   #1.2. Tailoring functions based on eval.
-  if(eval=="auc"){
-    rootML=match.fun(rootML_auc)
-    growTree=match.fun(growTree_auc)
-    combML=match.fun(combML_auc)
-  }else{
-    growTree=match.fun(growTree_mse) #mse & bs are the same
-    if(eval=="mse"){
-      rootML=match.fun(rootML_mse)
-      combML=match.fun(combML_mse)
-    }else if(eval=="bs"){
-      rootML=match.fun(rootML_bs)
-      combML=match.fun(combML_bs)
-    }
+  growTree=match.fun(growTree_mse) #mse & bs are the same
+  if(eval=="mse"){
+    rootML=match.fun(rootML_mse)
+    combML=match.fun(combML_mse)
+  }else if(eval=="bs"){
+    rootML=match.fun(rootML_bs)
+    combML=match.fun(combML_bs)
   }
 
   #1.3. ML list
