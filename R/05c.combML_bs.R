@@ -13,12 +13,15 @@ combML_bs=function(y_tr_lt,z_tr_lt,y_tr_rt,z_tr_rt,
   #mse_tr_lt=rep(NA,R)
   mse_va_lt=rep(NA,R)
   for(r in 1:R){
-    fit_lt[[r]]=FUN1[[r]](y_tr_lt,z_tr_lt)
-    y_hat_lt=FUN2[[r]](fit_lt[[r]],z_va_lt)
+    fit_lt_r=FUN1[[r]](y_tr_lt,z_tr_lt)
+    if(!is.null(fit_lt_r)){
+      fit_lt[[r]]=fit_lt_r
+      y_hat_lt=FUN2[[r]](fit_lt[[r]],z_va_lt)
 
-    #mse_tr_lt[r]=sum((y_tr_lt-y_hat_lt)^2)
-    y_va_lt_num=as.numeric(y_va_lt==1)
-    mse_va_lt[r]=sum((y_va_lt_num-y_hat_lt)^2)
+      #mse_tr_lt[r]=sum((y_tr_lt-y_hat_lt)^2)
+      y_va_lt_num=as.numeric(y_va_lt==1)
+      mse_va_lt[r]=sum((y_va_lt_num-y_hat_lt)^2)
+    }
   }
 
   #2. MLs for left child node
@@ -26,12 +29,15 @@ combML_bs=function(y_tr_lt,z_tr_lt,y_tr_rt,z_tr_rt,
   mse_tr_rt=rep(NA,R)
   mse_va_rt=rep(NA,R)
   for(r in 1:R){
-    fit_rt[[r]]=FUN1[[r]](y_tr_rt,z_tr_rt)
-    y_hat_rt=FUN2[[r]](fit_rt[[r]],z_va_rt)
+    fit_rt_r=FUN1[[r]](y_tr_rt,z_tr_rt)
+    if(!is.null(fit_rt_r)){
+      fit_rt[[r]]=fit_rt_r
+      y_hat_rt=FUN2[[r]](fit_rt[[r]],z_va_rt)
 
-    #mse_tr_rt[r]=sum((y_tr_rt-y_hat_rt)^2)
-    y_va_rt_num=as.numeric(y_va_rt==1)
-    mse_va_rt[r]=sum((y_va_rt_num-y_hat_rt)^2)
+      #mse_tr_rt[r]=sum((y_tr_rt-y_hat_rt)^2)
+      y_va_rt_num=as.numeric(y_va_rt==1)
+      mse_va_rt[r]=sum((y_va_rt_num-y_hat_rt)^2)
+    }
   }
 
   #3. Choose the best ML comb

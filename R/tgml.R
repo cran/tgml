@@ -53,6 +53,8 @@ tgml=function(y,x,z,ynew=NULL,xnew=NULL,znew=NULL,
     }else{      #continuous
       th[[p]]=quantile(x[,p],prob=prob)
     }
+    th[[p]]=unique(th[[p]]) #remove unique cutoff
+    th[[p]]=th[[p]][!(th[[p]]%in%c(min(x[,p]),max(x[,p])))] #remove min & max
   }
   th_num=unlist(lapply(th,length)) #number of candidate threshold values for eacth pth variable
   th_num_max=max(th_num) #n_th is the number of candidate threshold values for eact pth variable
