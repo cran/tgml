@@ -184,6 +184,7 @@ tgml=function(y,x,z,ynew=NULL,xnew=NULL,znew=NULL,
   fit_pred=tgml_predict(y,x,z,fit) #fitted
   fit$y_hat=fit_pred$y_hat
   fit$node_hat=fit_pred$node_hat
+
   if(type=="c"){
     fit$mse=mean((y-fit$y_hat)^2)
   }else if(type=="b") {
@@ -199,6 +200,7 @@ tgml=function(y,x,z,ynew=NULL,xnew=NULL,znew=NULL,
   if(!is.null(ynew)){
     fit_pred_new=tgml_predict(ynew,xnew,znew,fit) #new
     fit$y_hat_new=fit_pred_new$y_hat
+
     fit$node_hat_new=fit_pred_new$node_hat
     if(type=="c"){
       fit$mse_new=mean((ynew-fit$y_hat_new)^2)
