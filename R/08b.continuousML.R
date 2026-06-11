@@ -24,6 +24,7 @@ c_lasso_predict=function(fit,newx){
 c_rf=function(y,x){
   df=data.frame(x=x, y=y)
   colnames(df)=c(paste0("x",1:ncol(x)),"y")
+  df=as.data.frame(lapply(df, unlist))
   fit=NULL
   suppressWarnings(try(fit<-randomForest::randomForest(y~.,data=df),silent=TRUE))
   return(fit)
@@ -32,6 +33,7 @@ c_rf_predict=function(fit,newx){
   y.hat=rep(NA,nrow(newx))
   if(!is.null(fit)){
     df=data.frame(x=newx)
+    df=as.data.frame(lapply(df, unlist))
     colnames(df)=paste0("x",1:ncol(newx))
     y.hat=as.numeric(predict(fit, df, type = "response"))
   }
@@ -42,6 +44,7 @@ c_rf_predict=function(fit,newx){
 c_svm=function(y,x,kernel="radial") {
   df=data.frame(x=x, y=y)
   colnames(df)=c(paste0("x",1:ncol(x)),"y")
+  df=as.data.frame(lapply(df, unlist))
   fit=NULL
   suppressWarnings(try(fit<-e1071::svm(y~.,data=df, kernel=kernel),silent=TRUE))
   return(fit)
@@ -50,6 +53,7 @@ c_svm_predict=function(fit,newx) {
   y.hat=rep(NA,nrow(newx))
   if(!is.null(fit)){
     df=data.frame(x=newx)
+    df=as.data.frame(lapply(df, unlist))
     colnames(df)=paste0("x",1:ncol(newx))
     y.hat=as.numeric(predict(fit, newdata = df))
   }

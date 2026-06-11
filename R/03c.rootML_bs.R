@@ -6,7 +6,6 @@ rootML_bs=function(df_tr,df_va,R,FUN1,FUN2,y_sel,z_sel,MLlist){
   for(r in 1:R){
     fit_root[[r]]=FUN1[[r]](y_tr,z_tr)
     y_hat_root=FUN2[[r]](fit_root[[r]],z_va)
-
     y_va_num=as.numeric(y_va==1)
     mse_va_root[r]=sum((y_va_num-y_hat_root)^2)
   }
