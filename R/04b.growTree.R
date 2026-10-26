@@ -1,4 +1,4 @@
-growTree_mse=function(s,
+growTree=function(s,
                    df_tr, df_va, y_sel, x_sel, z_sel,
                    P,Q,R,
                    splitVariable,cutoff,terminal,

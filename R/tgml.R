@@ -1,27 +1,32 @@
 tgml=function(y,x,z,ynew=NULL,xnew=NULL,znew=NULL,
-             MLlist=c("lasso","rf","svm"),
-             cut=10,max_depth=4,min_sample=20){
+             MLlist=c("lasso","rf","svm"),eval=NULL,
+             cut=10,max_depth=4,min_sample=20,verbose=TRUE){
 
   ###
   #1. setup
   ###
   #1.1. outcome type
-  if(is.factor(y)){
+  type="c"
+  if(is.factor(y))
     type="b" #binary
-    eval="bs"
-  }else{
-    type="c"
+
+  if(is.null(eval)){
     eval="mse"
+    if(type=="b")
+      eval="bs"
   }
 
   #1.2. Tailoring functions based on eval.
-  growTree=match.fun(growTree_mse) #mse & bs are the same
+  growTree=match.fun(growTree)
   if(eval=="mse"){
     rootML=match.fun(rootML_mse)
     combML=match.fun(combML_mse)
   }else if(eval=="bs"){
     rootML=match.fun(rootML_bs)
     combML=match.fun(combML_bs)
+  }else if(eval=="auc"){
+    rootML=match.fun(rootML_auc)
+    combML=match.fun(combML_auc)
   }
 
   #1.3. ML list
@@ -111,10 +116,13 @@ tgml=function(y,x,z,ynew=NULL,xnew=NULL,znew=NULL,
   MSE_VA=NULL
   depth.s=floor(log2(s)) #start from 1
   max_s=2^max_depth-1
-  message("Recursive partitioning:")
+  if(verbose==TRUE)
+    message("Recursive partitioning:")
   while(depth.s < max_depth){
-    message(paste0("Node ",s, " of total ",max_s))
-    depth.s
+    if(verbose==TRUE)
+      message(paste0("Node ",s, " of total ",max_s))
+
+    #depth.s
 
     lcn=2*s  #left and right child node
     rcn=2*s+1
@@ -159,19 +167,11 @@ tgml=function(y,x,z,ynew=NULL,xnew=NULL,znew=NULL,
         #save all trees up to the internal node s with two terminal nodes lcn & rcn
         depth=floor(log2(max(terminal)))
 
-        if(eval%in%c("mse","bs")){
-          if(res$mse_va_hat<fit$mse_va)
-            fit=list(terminal=terminal,internal=internal,depth=depth,
-                     splitVariable=splitVariable,cutoff=cutoff,
-                     fitML=fitML,selML=selML,mse_va=res$mse_va_hat,
-                     n_tr=n_tr,n_va=n_va)
-        }else{
-          if(res$mse_va_hat>fit$mse_va)
-            fit=list(terminal=terminal,internal=internal,depth=depth,
-                     splitVariable=splitVariable,cutoff=cutoff,
-                     fitML=fitML,selML=selML,
-                     mse_va=res$mse_va_hat,n_tr=n_tr,n_va=n_va)
-        }
+        if(res$mse_va_hat<fit$mse_va)
+          fit=list(terminal=terminal,internal=internal,depth=depth,
+                   splitVariable=splitVariable,cutoff=cutoff,
+                   fitML=fitML,selML=selML,mse_va=res$mse_va_hat,
+                   n_tr=n_tr,n_va=n_va)
       }
     }
     s=s+1
@@ -245,8 +245,10 @@ tgml=function(y,x,z,ynew=NULL,xnew=NULL,znew=NULL,
   ###
   #9 output
   ###
-  message("Result")
-  tgml_print(x,P,fit)
+  if(verbose==TRUE){
+    message("Result")
+    tgml_print(x,P,fit)
+  }
 
   return(fit)
 }

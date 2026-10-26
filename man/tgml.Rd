@@ -3,7 +3,7 @@
 \title{Tree Guided Machine Learning}
 \description{Generalized classification and tree model that assigns the most effective predictive model to each terminal node.}
 \usage{
-  tgml(y,x,z,ynew,xnew,znew,MLlist,cut,max_depth,min_sample)
+  tgml(y,x,z,ynew,xnew,znew,MLlist,eval,cut,max_depth,min_sample,verbose)
 }
 \arguments{
   \item{y}{Response vector. If a factor codied as 0 or 1, classification is assumed. Otherwise, regression is assumed.}
@@ -13,9 +13,11 @@
   \item{xnew}{Data.frame or matrix for the test set corresponding to x (default xnew=NULL).}
   \item{znew}{Data.frame or matrix for the test set corresponding to z (default znew=NULL).}
   \item{MLlist}{Candidate predictive models that can be assigned to each terminal node (default MLlist=c("lasso","rf","svm")). Any other predictive models can be included. See the details below.}
+  \item{eval}{Criterion for splitting trees: "mse" (mean squared error), "bs", or "auc" (area under the ROC curve). Default: eval=NULL, then "mse" for continuous y and "bs" for binary y.}
   \item{cut}{Number of percentile-based candidate cutoff values for each x[,j], j=1,2,.... (default cut=10). This is only used when x[,j] has the unique values more than cut.}
-  \item{max_depth}{Maximum depth of trees. (default max_depth=4)}
+  \item{max_depth}{Maximum depth of trees. (default max_depth=4).}
   \item{min_sample}{The number of minimum sample size per each node, i.e., length(y)>min_sample if y is continuous and min(length(y==1),length(y==0))>min_sample (default min_sample=20).}
+  \item{verbose}{Show progress messages if verbose=TRUE.}
 }
 \details{The tgml function uses recursive partitioning to simultaneously identify subgroups and subgroup-specific predictive models. Specifically, the data (y,x,z) are randomly split into training and validation sets. At each candidate split, predictive models specified in MLlist are fitted using the training set, and the optimal split is selected based on the validation MSE or BS.
 
@@ -48,7 +50,7 @@ Currently, terminal-node-specfic predictive models include lasso(), randomForest
 \item{auc_new}{Test AUC.}
 }
 
-\references{Nishtha Shah, Hassan Ghasemzadeh and Yunro Chung, Treed-guided machine learning for precision diagnostics (in preperation)}
+\references{Nishtha Shah, Hassan Ghasemzadeh and Yunro Chung, Treed-guided machine learning for precision diagnostics and subgroup-specific biomarker discovery (in preperation)}
 \author{Yunro Chung [aut, cre]}
 
 \examples{
